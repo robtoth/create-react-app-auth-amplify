@@ -30,4 +30,18 @@ class App extends Component {
   }
 }
 
+Amplify.configure(
+    Auth: {
+        identityPoolId: 'us-east-1:9167be96-7b93-44fe-aa8d-36c5db00b07b', //REQUIRED - Amazon Cognito Identity Pool ID
+        region: 'us-east-1', // REQUIRED - Amazon Cognito Region
+        #userPoolId: 'XX-XXXX-X_abcd1234', //OPTIONAL - Amazon Cognito User Pool ID
+        #userPoolWebClientId: 'XX-XXXX-X_abcd1234', //OPTIONAL - Amazon Cognito Web Client ID
+    },
+    Storage: {
+        bucket: 'meddy-uploads', //REQUIRED -  Amazon S3 bucket
+        region: 'us-east-1', //OPTIONAL -  Amazon service region
+    }
+);
+console.log('Configuration done.')
+
 export default withAuthenticator(App);
