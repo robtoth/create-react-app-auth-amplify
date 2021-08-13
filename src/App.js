@@ -103,6 +103,8 @@ class App extends Component {
             // rebrandly - https://developers.rebrandly.com/docs/api-custom-url-shortener
             const rebrandly = this.state.rebrandly;
             
+            // potentially consider using rebrandly's generated random links, although the low-character digit ones can potentially be hacked, so for now we'll use our own uuid4 generator:
+            //const slashtag = uuidv4(); // <-- potentially can comment this line out if the client-side calculation of uuidv4 is somehow compromised (e.g. non-cryptographically secure pseudo-random-number-generator), and you want to instead trust rebrandly's server-side random link generation... hmm which is the better choice? I'll use server-side for now and trust they have secure random generation. -Dr. Toth, 2021-08-13
             rebrandly.links.create({destination: secure_amazon_uri,
                                     domain: { id: "5850f5fef9d44b8887aa8fb8e4791f48" }}
             ).then(rebrandly_result => {
@@ -133,6 +135,7 @@ class App extends Component {
         <header className="App-header">
           <a href='https://meddyhealth.co/'>
             <img src={logo} className="App-logo" alt="logo" />
+            <p>https://meddyhealth.co</p>
           </a>
           <h1>Secure Uploader</h1>
         
