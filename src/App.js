@@ -179,7 +179,7 @@ class App extends Component {
           <button onClick={this.updateSharableLink}>Generate Secure Link</button>
           
           {this.state.sharable_link_uri.length > 0 &&
-            <p className='info'>Note: This link expires in <b>{this.state.expire_minutes}</b> minutes.</p>
+            <p className='warning'>Note: This link expires in <b>{this.state.expire_minutes}</b> minutes.</p>
           }
           
           {this.state.sharable_link_uri.length > 0 &&
@@ -187,7 +187,7 @@ class App extends Component {
           }
           
           {this.state.last_update.length > 0 &&
-            <p><b>Most recent data upload:</b> {this.state.last_update}</p>
+            <p><b>Most recent data upload:</b> <i>{this.state.last_update}</i></p>
           }
           
           <p>For help, please email <a href='mailto:support@meddyhealth.co'>support@meddyhealth.co</a></p>
