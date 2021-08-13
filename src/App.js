@@ -129,7 +129,7 @@ class App extends Component {
     return (
           
       <div className="App">
-        <AmplifySignOut />
+        <h1>Meddy Account Info</h1>
         <p><b>Email: </b>{this.state.email}</p>
         <p><b>Phone: </b>{this.state.phone}</p>
         <header className="App-header">
@@ -192,6 +192,7 @@ class App extends Component {
           <p>For help, please email <a href='mailto:support@meddyhealth.co'>support@meddyhealth.co</a></p>
           
         </div>
+        <AmplifySignOut />
         
       </div>
     );
