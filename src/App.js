@@ -5,7 +5,6 @@ import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
 import Amplify, { Storage, Auth } from 'aws-amplify';
 
 import aws_exports from './aws-exports';
-console.log(aws_exports)
 Amplify.configure(aws_exports);
 
 
@@ -19,13 +18,27 @@ function uuidv4() {
 
 class App extends Component {
   state = {
-    email: "",
+    expire_minutes: 10,
+    last_update: "(First generate link)",
+    email: "loading...",
+    phone: "loading...",
     imageName: "",
     imageFile: "",
     response: "",
     sharable_link_uri: 'https://meddyhealth.co'
   };
 
+  async componentDidMount() {
+    let user = await Auth.currentAuthenticatedUser();
+    const { attributes } = user;
+    //console.log('Attributes = ')
+    //console.log(attributes)
+    const email = attributes['email'];
+    const phone = attributes['phone_number'];
+    this.setState({ email });
+    this.setState({ phone });
+  }
+  
   uploadImage = () => {
     const file = this.upload.files[0];
     const filetype = file.type;
@@ -50,14 +63,44 @@ class App extends Component {
     Auth.currentUserCredentials().then( credentials => {
       
       const identityId = credentials.identityId
-      //console.log(identityId);
       
-      Storage.get(identityId + '/test_upload.zip', {bucket: 'meddy-sharing'}).then( result => {
-        console.log(result);
-        this.setState({sharable_link_uri: result})
-      }).catch( error => {
-        console.error(error);
-      });
+      const bucket = 'meddy-sharing';
+      Storage.list(identityId, {bucket: bucket}).then( result => {
+        console.log(result)
+        
+        let most_recent_date = null;
+        let most_recent_key = null;
+        
+        for (const sharable_file of result) {
+          const last_modified = new Date(sharable_file['lastModified'])
+          //console.log(last_modified);
+          if (most_recent_date === null || last_modified > most_recent_date) {
+            most_recent_date = last_modified;
+            most_recent_key = sharable_file['key'];
+          }
+        }
+        
+        if (most_recent_key === null) {
+          alert('Error: No files uploaded. Please wait a few minutes if you just uploaded something.');
+          this.setState({sharable_link_uri: 'https://meddyhealth.co'});
+        } else {
+          console.log(most_recent_date)
+          this.setState({last_update: most_recent_date.toString()});
+          //this.setState({ last_update });
+          const expire_minutes = this.state.expire_minutes;
+          const expire_seconds = expire_seconds * 60;
+          Storage.get(most_recent_key,
+                      {bucket: bucket,
+                       expires: expire_seconds
+                      }).then( result => {
+            this.setState({sharable_link_uri: result})
+          }).catch( error => {
+            console.error(error);
+          });
+        }
+      
+      }).catch(err => console.error(err));
+      
     });
   }
 
@@ -72,6 +115,10 @@ class App extends Component {
             <img src={logo} className="App-logo" alt="logo" />
           </a>
           <h1>Secure Uploader</h1>
+        
+          <p><b>Email: </b>{this.state.email}</p>
+          <p><b>Phone: </b>{this.state.phone}</p>
+          
         </header>
         
         <h2>Select a picture of your medical data and click <i>Upload File</i>:</h2>
@@ -110,10 +157,12 @@ class App extends Component {
           <h1>Sharable Link:</h1>
           <button onClick={this.updateSharableLink}>Generate Secure Link</button>
           
-          <p className='info'>Note: This link expires in 15 minutes.</p>
+          <p className='info'>Note: This link expires in <b>{this.state.expire_minutes}</b> minutes.</p>
           
           <h3><a href={this.state.sharable_link_uri} target='blank'>{this.state.sharable_link_uri}</a></h3>
+          <p><b>Last data upload:</b> {this.state.last_update}</p>
           <p>For help, please email <a href='mailto:support@meddyhealth.co'>support@meddyhealth.co</a></p>
+          
         </div>
         
       </div>
