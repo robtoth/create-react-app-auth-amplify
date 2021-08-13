@@ -6,6 +6,19 @@ import Amplify, { Storage } from 'aws-amplify';
 import aws_exports from './aws-exports';
 Amplify.configure(aws_exports);
 
+async function onChange(e) {
+  debugger;
+  const file = e.target.files[0];
+  try {
+    await Storage.put(file.name, file, {
+      contentType: 'image/png' // contentType is optional
+    });
+  } catch (error) {
+    console.log('Error uploading file: ', error);
+    debugger;
+  }  
+}
+    
 class App extends Component {
   render() {
     return (
@@ -16,6 +29,13 @@ class App extends Component {
           <p>
             Edit <code>src/App.js</code> and save to reload.
           </p>
+  
+          <h1>Hello, world!</h1>
+          <input
+            type="file"
+            onChange={onChange}
+          />
+  
           <a
             className="App-link"
             href="https://reactjs.org"
