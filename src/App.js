@@ -8,6 +8,9 @@ Amplify.configure(aws_exports);
 
 async function onChange(e) {
   console.log(e)
+  console.log(Auth.currentSession())
+  console.log(Auth.currentCredentials())
+  console.log(Storage)
   const file = e.target.files[0];
   console.log(file)
   try {
