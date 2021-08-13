@@ -16,3 +16,12 @@
 .App-link {
   color: #61dafb;
 }
+
+div.sharable {
+  background-color: lightgrey;
+  color: black;
+}
+
+p.info {
+  color: darkred;
+}

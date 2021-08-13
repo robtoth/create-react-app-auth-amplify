@@ -48,7 +48,9 @@ class App extends Component {
       <div className="App">
         <AmplifySignOut />
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
+          <a href='https://meddyhealth.co/'>
+            <img src={logo} className="App-logo" alt="logo" />
+          </a>
           <h1>Secure Uploader</h1>
         </header>
         
@@ -82,7 +84,18 @@ class App extends Component {
         <button onClick={this.uploadImage}> Upload File </button>
 
         {!!this.state.response && <div>{this.state.response}</div>}
-        <p>Progress will be shown here.</p>
+        <p class='info'>Upload progress will be shown here.</p>
+        
+        <div class='sharable'>
+          <h1>Sharable Link:</h1>
+          <i>
+          <p class='info'>Note: Refresh this page to regenerate the link.</p>
+          <p class='info'>This link expires in 15 minutes.</p>
+          </i>
+          <h3><a href='www.google.com'>www.google.com</a></h3>
+          <p>For help, please email <a href='mailto:support@meddyhealth.co'>support@meddyhealth.co</a></p>
+        </div>
+        
       </div>
     );
   }
