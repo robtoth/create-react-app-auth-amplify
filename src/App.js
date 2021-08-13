@@ -2,13 +2,19 @@ import React, { Component } from 'react';
 import logo from './logo.png';
 import './App.css';
 import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
-import Amplify, { Storage, Auth } from 'aws-amplify';
+import Amplify, { Storage } from 'aws-amplify';
 
 import aws_exports from './aws-exports';
 console.log(aws_exports)
 Amplify.configure(aws_exports);
 
 
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
 
 class App extends Component {
   state = {
@@ -18,11 +24,14 @@ class App extends Component {
   };
 
   uploadImage = () => {
-    Storage.put(`userimages/${this.upload.files[0].name}`,
-                this.upload.files[0],
+    const file = this.upload.files[0];
+    const filetype = file.type;
+    const extension = file.name.split('.').pop();
+    Storage.put(uuidv4() + '.' + extension,
+                file,
                 {
                   level: 'private',
-                  contentType: this.upload.files[0].type
+                  contentType: filetype
                 })
       .then(result => {
         this.upload = null;
