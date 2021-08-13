@@ -129,7 +129,7 @@ class App extends Component {
     return (
           
       <div className="App">
-        <p className='warning'><b>Warning: This is a prototype and not yet approved for clinical use. Until we have completed implementation of full server-side encryption and implemented a process for regular security audits, please do not submit sensitive data here.</b></p>
+        <p className='warning'><b>Warning:</b> This is a prototype and not yet approved for clinical use. Until we have completed implementation of full server-side encryption and implemented a process for regular security audits, please do not submit sensitive data here.</p>
         <h1>Meddy Account Info</h1>
         <p><b>Email: </b>{this.state.email}</p>
         <p><b>Phone: </b>{this.state.phone}</p>
