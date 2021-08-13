@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import logo from './logo.png';
 import './App.css';
 import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
-import Amplify, { Storage } from 'aws-amplify';
+import Amplify, { Storage, Auth } from 'aws-amplify';
+
 import aws_exports from './aws-exports';
+console.log(aws_exports)
 Amplify.configure(aws_exports);
 
 async function onChange(e) {
