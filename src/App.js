@@ -15,9 +15,14 @@ function uuidv4() {
   });
 }
 
+var Rebrandly = require("rebrandly")
 
 class App extends Component {
   state = {
+    rebrandly: new Rebrandly({
+        apikey: "5149a0e582824fc898d76011444265f6"
+        //workspace: "MEDDY_WORKSPACE"
+    }),
     expire_minutes: 10,
     last_update: '',
     email: "loading...",
@@ -37,6 +42,7 @@ class App extends Component {
     const phone = attributes['phone_number'];
     this.setState({ email });
     this.setState({ phone });
+    
   }
   
   uploadImage = () => {
@@ -92,8 +98,20 @@ class App extends Component {
           Storage.get(most_recent_key,
                       {bucket: bucket,
                        expires: expire_seconds
-                      }).then( result => {
-            this.setState({sharable_link_uri: result})
+          }).then( secure_amazon_uri => {
+            
+            // rebrandly - https://developers.rebrandly.com/docs/api-custom-url-shortener
+            const rebrandly = this.state.rebrandly;
+            
+            rebrandly.links.create({destination: secure_amazon_uri,
+                                    domain: { id: "5850f5fef9d44b8887aa8fb8e4791f48" }}
+            ).then(rebrandly_result => {
+              console.log(rebrandly_result);
+              const rebrandly_short_url = rebrandly_result['shortUrl'];
+              console.log(rebrandly_short_url);
+              this.setState({sharable_link_uri: 'http://' + rebrandly_short_url})
+            });
+            
           }).catch( error => {
             console.error(error);
           });
@@ -160,12 +178,12 @@ class App extends Component {
             <p className='info'>Note: This link expires in <b>{this.state.expire_minutes}</b> minutes.</p>
           }
           
-          {this.state.last_update.length > 0 &&
-            <p><b>Most recent data upload:</b> {this.state.last_update}</p>
+          {this.state.sharable_link_uri.length > 0 &&
+            <h3><a href={this.state.sharable_link_uri} target='_blank'>{this.state.sharable_link_uri}</a></h3>
           }
           
-          {this.state.sharable_link_uri.length > 0 &&
-            <h3><a href={this.state.sharable_link_uri} target='blank'>{this.state.sharable_link_uri}</a></h3>
+          {this.state.last_update.length > 0 &&
+            <p><b>Most recent data upload:</b> {this.state.last_update}</p>
           }
           
           <p>For help, please email <a href='mailto:support@meddyhealth.co'>support@meddyhealth.co</a></p>
