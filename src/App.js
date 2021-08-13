@@ -1,11 +1,24 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import logo from './logo.png';
 import './App.css';
 import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react'
-import Amplify from 'aws-amplify';
+import Amplify, { Storage } from 'aws-amplify';
 import aws_exports from './aws-exports';
 Amplify.configure(aws_exports);
 
+async function onChange(e) {
+  debugger;
+  const file = e.target.files[0];
+  try {
+    await Storage.put(file.name, file, {
+      contentType: 'image/png' // contentType is optional
+    });
+  } catch (error) {
+    console.log('Error uploading file: ', error);
+    debugger;
+  }  
+}
+    
 class App extends Component {
   render() {
     return (
@@ -16,6 +29,13 @@ class App extends Component {
           <p>
             Edit <code>src/App.js</code> and save to reload.
           </p>
+  
+          <h1>Hello, world!</h1>
+          <input
+            type="file"
+            onChange={onChange}
+          />
+  
           <a
             className="App-link"
             href="https://reactjs.org"
@@ -29,17 +49,5 @@ class App extends Component {
     );
   }
 }
-
-Amplify.configure(
-    Auth: {
-        identityPoolId: 'us-east-1:9167be96-7b93-44fe-aa8d-36c5db00b07b', //REQUIRED - Amazon Cognito Identity Pool ID
-        region: 'us-east-1', // REQUIRED - Amazon Cognito Region
-    },
-    Storage: {
-        bucket: 'meddy-uploads-2', //REQUIRED -  Amazon S3 bucket
-        region: 'us-east-1', //OPTIONAL -  Amazon service region
-    }
-);
-console.log('Configuration done.')
 
 export default withAuthenticator(App);
