@@ -142,7 +142,7 @@ class App extends Component {
         
         </header>
         
-        <h2>Upload a PNG, JPG, or PDF file of your medical data:</h2>
+        <h2>Upload a picture of PDF of your medical data:</h2>
         <p className='warning'><b>Warning:</b> Do not submit sensitive data to this prototype such as individually identifiable health information.</p>
         <p><a href='https://www.hhs.gov/hipaa/for-professionals/privacy/laws-regulations/index.html' target='_blank'>Summary of the HIPAA Privacy Rule</a> (<i>External link</i>)</p>
         
