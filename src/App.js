@@ -8,52 +8,79 @@ import aws_exports from './aws-exports';
 console.log(aws_exports)
 Amplify.configure(aws_exports);
 
-async function onChange(e) {
-  console.log(e)
-  console.log(Auth.currentSession())
-  console.log(Auth.currentCredentials())
-  console.log(Storage)
-  const file = e.target.files[0];
-  console.log(file)
-  try {
-    console.log('Putting object in bucket...')
-    await Storage.put('public/' + file.name, file, {
-      contentType: 'image/png' // contentType is optional
-    });
-  } catch (error) {
-    console.log('Error uploading file: ', error);
-  }  
-}
-    
+
+
 class App extends Component {
+  state = {
+    imageName: "",
+    imageFile: "",
+    response: ""
+  };
+
+  uploadImage = () => {
+    Storage.put(`userimages/${this.upload.files[0].name}`,
+                this.upload.files[0],
+                {
+                  level: 'private',
+                  contentType: this.upload.files[0].type
+                })
+      .then(result => {
+        this.upload = null;
+        this.setState({ response: "Success uploading file!" });
+      })
+      .catch(err => {
+        this.setState({ response: `Cannot upload file: ${err}` });
+      });
+  };
+
   render() {
     return (
+          
       <div className="App">
         <AmplifySignOut />
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-  
-          <h1>Hello, world!</h1>
-          <input
-            type="file"
-            onChange={onChange}
-          />
-  
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
+          <h1>Secure Uploader</h1>
         </header>
+        
+        <h2>Select a picture of your medical data and click <i>Upload File</i>:</h2>
+        
+        <input
+          type="file"
+          accept="image/png, image/jpeg"
+          style={{ display: "none" }}
+          ref={ref => (this.upload = ref)}
+          onChange={e =>
+            this.setState({
+              imageFile: this.upload.files[0],
+              imageName: this.upload.files[0].name
+            })
+          }
+        />
+        
+        <input value={this.state.imageName} placeholder="Select file" />
+        
+        <button
+          onClick={e => {
+            this.upload.value = null;
+            this.upload.click();
+          }}
+          loading={this.state.uploading}
+        >
+          Browse
+        </button>
+
+        <button onClick={this.uploadImage}> Upload File </button>
+
+        {!!this.state.response && <div>{this.state.response}</div>}
+        <p>Progress will be shown here.</p>
       </div>
     );
   }
 }
 
+
+
+
 export default withAuthenticator(App);
+
