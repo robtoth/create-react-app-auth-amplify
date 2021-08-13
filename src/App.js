@@ -111,7 +111,7 @@ class App extends Component {
               console.log(rebrandly_result);
               const rebrandly_short_url = rebrandly_result['shortUrl'];
               console.log(rebrandly_short_url);
-              this.setState({sharable_link_uri: 'http://' + rebrandly_short_url})
+              this.setState({sharable_link_uri: 'https://' + rebrandly_short_url})
             });
             
           }).catch( error => {
