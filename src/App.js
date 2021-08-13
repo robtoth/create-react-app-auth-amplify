@@ -19,13 +19,13 @@ function uuidv4() {
 class App extends Component {
   state = {
     expire_minutes: 10,
-    last_update: "(First generate link)",
+    last_update: '',
     email: "loading...",
     phone: "loading...",
     imageName: "",
     imageFile: "",
     response: "",
-    sharable_link_uri: 'https://meddyhealth.co'
+    sharable_link_uri: ''
   };
 
   async componentDidMount() {
@@ -110,22 +110,21 @@ class App extends Component {
           
       <div className="App">
         <AmplifySignOut />
+        <p><b>Email: </b>{this.state.email}</p>
+        <p><b>Phone: </b>{this.state.phone}</p>
         <header className="App-header">
           <a href='https://meddyhealth.co/'>
             <img src={logo} className="App-logo" alt="logo" />
           </a>
           <h1>Secure Uploader</h1>
         
-          <p><b>Email: </b>{this.state.email}</p>
-          <p><b>Phone: </b>{this.state.phone}</p>
-          
         </header>
         
-        <h2>Select a picture of your medical data and click <i>Upload File</i>:</h2>
+        <h2>Upload a PNG, JPG, or PDF file of your medical data:</h2>
         
         <input
           type="file"
-          accept="image/png, image/jpeg"
+          accept="image/png, image/jpeg, application/pdf"
           style={{ display: "none" }}
           ref={ref => (this.upload = ref)}
           onChange={e =>
@@ -157,10 +156,18 @@ class App extends Component {
           <h1>Sharable Link:</h1>
           <button onClick={this.updateSharableLink}>Generate Secure Link</button>
           
-          <p className='info'>Note: This link expires in <b>{this.state.expire_minutes}</b> minutes.</p>
+          {this.state.sharable_link_uri.length > 0 &&
+            <p className='info'>Note: This link expires in <b>{this.state.expire_minutes}</b> minutes.</p>
+          }
           
-          <h3><a href={this.state.sharable_link_uri} target='blank'>{this.state.sharable_link_uri}</a></h3>
-          <p><b>Last data upload:</b> {this.state.last_update}</p>
+          {this.state.last_update.length > 0 &&
+            <p><b>Most recent data upload:</b> {this.state.last_update}</p>
+          }
+          
+          {this.state.sharable_link_uri.length > 0 &&
+            <h3><a href={this.state.sharable_link_uri} target='blank'>{this.state.sharable_link_uri}</a></h3>
+          }
+          
           <p>For help, please email <a href='mailto:support@meddyhealth.co'>support@meddyhealth.co</a></p>
           
         </div>
