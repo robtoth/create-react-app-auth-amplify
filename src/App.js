@@ -7,15 +7,16 @@ import aws_exports from './aws-exports';
 Amplify.configure(aws_exports);
 
 async function onChange(e) {
-  debugger;
+  console.log(e)
   const file = e.target.files[0];
+  console.log(file)
   try {
-    await Storage.put(file.name, file, {
+    console.log('Putting object in bucket...')
+    await Storage.put('public/' + file.name, file, {
       contentType: 'image/png' // contentType is optional
     });
   } catch (error) {
     console.log('Error uploading file: ', error);
-    debugger;
   }  
 }
     
