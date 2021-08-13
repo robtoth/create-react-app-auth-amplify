@@ -24,5 +24,8 @@ div.sharable {
 }
 
 p.info {
+  color: darkblue;
+}
+p.warning {
   color: darkred;
 }
